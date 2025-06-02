@@ -31,15 +31,19 @@ public class Post {
     @JoinColumn(name = "auto_user_id")
     private User author;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     @JoinColumn(name = "auto_post_id")
     private List<PriceHistory> priceHistory = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "participates",
             joinColumns = {@JoinColumn(name = "post_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
     private List<User> subscribers = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "car_id")
+    private Car car;
 }
