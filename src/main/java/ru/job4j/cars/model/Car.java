@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Entity
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "id")
 @Table(name = "car")
 @NoArgsConstructor
 @AllArgsConstructor

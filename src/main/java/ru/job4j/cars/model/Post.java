@@ -3,24 +3,24 @@ package ru.job4j.cars.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.EqualsAndHashCode.Include;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "auto_post")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(of = "id")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Include
     private int id;
 
     private String description;
@@ -30,8 +30,11 @@ public class Post {
     @Column(name = "is_sold")
     private boolean isSold;
 
-    @Column(name = "photo_url")
-    private String photoUrl;
+    @ManyToMany
+    @JoinTable(name = "post_photos",
+    joinColumns = {@JoinColumn(name = "post_id")},
+    inverseJoinColumns = {@JoinColumn(name = "photo_id")})
+    private Set<Photo> photos = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "auto_user_id")
