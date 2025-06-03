@@ -21,12 +21,17 @@
 
 ## TODO-лист проекта
 
-[ ] Справочники: Brand, BodyType (заполнить заранее тестовыми данными)
-[ ] Сущности: User, Model, Mark, Car, Photo, Post (аннотации, связи)
-[ ] Репозитории: AbstractCrudRepository + конкретные методы (findById, findAll, findByUser, …
-[ ] Сервисы: UserService (регистрация, аутентификация), PostService (создать, найти, пометить «продано»)
-[ ] Контроллеры: HomeController, PostController, AuthController
-[ ] Thymeleaf:  
+❌ Справочники: Brand, BodyType (заполнить заранее тестовыми данными)
+
+❌ Сущности: User, Model, Mark, Car, Photo, Post (аннотации, связи)
+
+❌ Репозитории: AbstractCrudRepository + конкретные методы (findById, findAll, findByUser, …
+
+❌ Сервисы: UserService (регистрация, аутентификация), PostService (создать, найти, пометить «продано»)
+
+❌ Контроллеры: HomeController, PostController, AuthController
+
+❌ Thymeleaf:  
     – home.html (таблица/карточки объявлений)
     - post.html (конкретный пост на продажу)
     - login.html (логин)
@@ -35,14 +40,17 @@
     - edit.html (форма редактирования поста)
     – fragments/header.html (общая навигация)  
     – templates для работы с ошибками/404
-[ ] Хранение фото:  
+    
+❌ Хранение фото:  
     – Если в файловой системе — определить `upload.dir` в свойствах и описать в `StorageService`.  
     – Или вообще сразу хранить в БД (bytea), но тогда придётся думать об ограничениях.  
-[ ] Аутентификация:  
+    
+❌ Аутентификация:  
     - Фильтры для незарегистрированных пользователей
     - Доступ к редактированию поста для создателя (user)
     - Доступ к добавлениям постов только для зарегистрированных пользователей
-[ ] Тесты:  
+    
+❌ Тесты:  
     – Модульные — `PostServiceTest`, `CarServiceTest`.  
     – Интеграционные, если остаётся время H2 + Hibernate.  
 
