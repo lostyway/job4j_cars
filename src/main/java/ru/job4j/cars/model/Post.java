@@ -27,6 +27,12 @@ public class Post {
 
     private LocalDateTime created;
 
+    @Column(name = "is_sold")
+    private boolean isSold;
+
+    @Column(name = "photo_url")
+    private String photoUrl;
+
     @ManyToOne
     @JoinColumn(name = "auto_user_id")
     private User author;

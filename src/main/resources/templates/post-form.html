@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Добавление объявления</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:replace="fragments/navigation :: navigation"></div>
+<h1>Добавление нового объявления</h1>
+<form action="/posts/save" method="post">
+    <div>
+        <label for="description">Описание:</label>
+        <textarea name="description" id="description" rows="4" cols="50"></textarea>
+    </div>
+    <div>
+        <h3>Информация о машине</h3>
+        <label for="brand">Марка:</label>
+        <input type="text" name="car.brand" id="brand" required>
+        <br>
+        <label for="model">Модель:</label>
+        <input type="text" name="car.model" id="model" required>
+        <br>
+        <label for="bodyType">Тип кузова:</label>
+        <input type="text" name="car.bodyType" id="bodyType" required>
+        <br>
+        <label for="category">Категория:</label>
+        <input type="text" name="car.category" id="category">
+        <br>
+        <label for="photoPath">Фото (URL или путь):</label>
+        <input type="text" name="car.photoPath" id="photoPath">
+    </div>
+    <!-- В реальном проекте идентификатор пользователя берётся из сессии -->
+    <input type="hidden" name="userId" value="1" />
+    <br>
+    <button type="submit">Сохранить объявление</button>
+</form>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>
