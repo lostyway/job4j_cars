@@ -3,7 +3,6 @@ package ru.job4j.cars.repository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import java.io.Serializable;
 import java.util.List;

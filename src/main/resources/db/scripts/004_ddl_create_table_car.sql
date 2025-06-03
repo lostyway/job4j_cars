@@ -5,5 +5,6 @@ create table car
     category text,
     mark text,
     model text,
+    year date,
     engine_id int not null references engines(id)
 );
