@@ -3,6 +3,7 @@ package ru.job4j.cars.repository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
-public abstract class AbstractCrudRepository<T, ID extends Serializable> implements ICrudRepository<T, ID> {
+public abstract class AbstractCrudRepository<T, ID extends Serializable> implements ICrudRepository<T, ID>, AutoCloseable {
 
     private final SessionFactory sf;
     private final Class<T> modelClass;
@@ -85,5 +86,9 @@ public abstract class AbstractCrudRepository<T, ID extends Serializable> impleme
         if (session.getTransaction().isActive()) {
             session.getTransaction().rollback();
         }
+    }
+
+    public void close() {
+        sf.close();
     }
 }
