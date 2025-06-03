@@ -21,9 +21,9 @@
 
 ## TODO-лист проекта
 
-❌ Справочники: Brand, BodyType (заполнить заранее тестовыми данными)
+✅ Справочники: Mark, Model (заполнить заранее тестовыми данными)
 
-❌ Сущности: User, Model, Mark, Car, Photo, Post (аннотации, связи)
+✅ Сущности: User, Model, Mark, Car, Post (аннотации, связи)
 
 ❌ Репозитории: AbstractCrudRepository + конкретные методы (findById, findAll, findByUser, …
 
