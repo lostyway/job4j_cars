@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode.Include;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,6 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "auto_user_id")
     private User author;
-
 
     @OneToMany
     @JoinColumn(name = "auto_post_id")

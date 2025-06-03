@@ -24,13 +24,15 @@ public class Car {
 
     private String name;
 
-    private String category;
-
-    private String mark;
-
-    private String model;
-
     private LocalDate year;
+
+    @ManyToOne
+    @JoinColumn(name = "mark_id")
+    private Mark mark;
+
+    @ManyToOne
+    @JoinColumn(name = "model_id")
+    private Model model;
 
     @ManyToOne
     @JoinColumn(name = "engine_id", foreignKey = @ForeignKey(name = "ENGINE_ID_FK"))

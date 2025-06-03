@@ -1,0 +1,9 @@
+insert into marks(name) values ('BMW');
+insert into marks(name) values ('Subaru');
+insert into marks(name) values ('Honda');
+insert into marks(name) values ('Mercedes');
+insert into marks(name) values ('Lada');
+insert into marks(name) values ('Vaz');
+insert into marks(name) values ('Toyota');
+insert into marks(name) values ('Mitsubishi');
+insert into marks(name) values ('Volkswagen');

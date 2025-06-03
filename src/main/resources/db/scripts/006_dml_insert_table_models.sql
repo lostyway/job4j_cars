@@ -1,0 +1,9 @@
+insert into models(name) values ('V1');
+insert into models(name) values ('V2');
+insert into models(name) values ('V3');
+insert into models(name) values ('V4');
+insert into models(name) values ('V5');
+insert into models(name) values ('X103');
+insert into models(name) values ('C202');
+insert into models(name) values ('2014');
+insert into models(name) values ('VLK1');
