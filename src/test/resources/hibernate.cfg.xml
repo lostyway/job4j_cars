@@ -25,5 +25,6 @@
         <mapping class="ru.job4j.cars.model.Post" />
         <mapping class="ru.job4j.cars.model.PriceHistory" />
         <mapping class="ru.job4j.cars.model.User" />
+        <mapping class="ru.job4j.cars.model.Photo" />
     </session-factory>
 </hibernate-configuration>
