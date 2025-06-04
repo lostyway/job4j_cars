@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Детали объявления</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<h1>Информация об объявлении</h1>
+
+<div>
+    <h2 th:text="${post.description}">Описание</h2>
+    <p><strong>Создано:</strong> <span th:text="${#temporals.format(post.created, 'dd.MM.yyyy HH:mm')}">Дата</span></p>
+    <p><strong>Цена:</strong> <span th:text="${post.price}">0</span> ₽</p>
+    <p><strong>Продано:</strong> <span th:text="${post.isSold ? 'Да' : 'Нет'}">Нет</span></p>
+
+    <p><strong>Автор:</strong> <span th:text="${post.author.name}">Имя</span></p>
+    <p><strong>Марка:</strong> <span th:text="${post.car.mark.name}">Марка</span></p>
+    <p><strong>Модель:</strong> <span th:text="${post.car.name}">Модель</span></p>
+
+    <div>
+        <strong>Фото:</strong>
+        <div th:if="${#lists.isEmpty(post.photos)}">
+            <p>Нет фото</p>
+        </div>
+        <div th:each="photo : ${post.photos}">
+            <img th:src="@{|/images/${photo.name}|}" alt="Фото" style="max-width: 200px; max-height: 200px;" />
+        </div>
+    </div>
+
+    <div>
+        <strong>История цен:</strong>
+        <table>
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Старая цена</th>
+                <th>Новая цена</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="history : ${post.priceHistory}">
+                <td th:text="${#temporals.format(history.created, 'dd.MM.yyyy HH:mm')}">Дата</td>
+                <td th:text="${history.before}">0</td>
+                <td th:text="${history.after}">0</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <strong>Подписчики:</strong>
+        <ul>
+            <li th:each="user : ${post.subscribers}" th:text="${user.name}">Имя</li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

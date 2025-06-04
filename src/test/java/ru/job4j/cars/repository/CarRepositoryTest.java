@@ -20,9 +20,11 @@
 //             SessionFactory sf = new MetadataSources(registry).buildMetadata().buildSessionFactory();
 //             CarRepository carRepository = new CarRepository(sf)) {
 //
-//            Car car = new Car();
-//            car.setLogin("test");
-//            car.setPassword("passwordTest");
+//            Car car = Car.builder()
+//
+//                    .build()
+//            car.setName("test");
+//            car.set("passwordTest");
 //            Car result = carRepository.create(car);
 //            assertThat(result).isEqualTo(car);
 //            var optionalFind = carRepository.findById(result.getId());

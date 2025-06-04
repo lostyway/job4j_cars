@@ -47,6 +47,7 @@ public abstract class AbstractCrudRepository<T, ID extends Serializable> impleme
                 .list());
     }
 
+
     @Override
     public Optional<T> findById(ID id) {
         return txReturn(session -> Optional.ofNullable(session.get(modelClass, id)));

@@ -10,6 +10,7 @@ import javax.persistence.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "marks")
 public class Mark {
     @Id

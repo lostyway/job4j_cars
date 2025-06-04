@@ -20,9 +20,7 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String name;
-
-    private LocalDate year;
+    private String year;
 
     @ManyToOne
     @JoinColumn(name = "mark_id")

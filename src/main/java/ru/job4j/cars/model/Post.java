@@ -23,7 +23,7 @@ public class Post {
 
     private String description;
 
-    private LocalDateTime created;
+    private LocalDateTime created = LocalDateTime.now();
 
     @Column(nullable = false)
     private long price;
