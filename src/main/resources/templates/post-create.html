@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Создание объявления</title>
-    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/styles.css"/>
 </head>
 <body>
 
@@ -29,7 +29,8 @@
             <select id="mark" name="car.mark.id" required>
                 <option th:each="mark : ${marks}"
                         th:value="${mark.id}"
-                        th:text="${mark.name}">Марка</option>
+                        th:text="${mark.name}">Марка
+                </option>
             </select>
         </div>
 
@@ -38,7 +39,8 @@
             <select id="model" name="car.model.id" required>
                 <option th:each="model : ${models}"
                         th:value="${model.id}"
-                        th:text="${model.name}">Модель</option>
+                        th:text="${model.name}">Модель
+                </option>
             </select>
         </div>
 
@@ -47,7 +49,8 @@
             <select id="year" name="car.year" required>
                 <option th:each="year : ${years}"
                         th:value="${year}"
-                        th:text="${year}">2023</option>
+                        th:text="${year}">2023
+                </option>
             </select>
         </div>
 
@@ -56,7 +59,8 @@
             <select id="engine" name="car.engine.id" required>
                 <option th:each="engine : ${engines}"
                         th:value="${engine.id}"
-                        th:text="${engine.name}">-</option>
+                        th:text="${engine.name}">-
+                </option>
             </select>
         </div>
 
@@ -65,17 +69,16 @@
             <select id="author" name="author.id" required>
                 <option th:each="user : ${users}"
                         th:value="${user.id}"
-                        th:text="${user.login}">Пользователь</option>
+                        th:text="${user.login}">Пользователь
+                </option>
             </select>
         </div>
 
+        <div>
+            <input type="file" name="photo" multiple />
+        </div>
+
     </fieldset>
-
-    <div>
-        <label for="photos">Фотографии:</label>
-        <input type="file" id="photos" name="files" multiple accept="image/*">
-    </div>
-
     <div>
         <button type="submit">Сохранить</button>
     </div>

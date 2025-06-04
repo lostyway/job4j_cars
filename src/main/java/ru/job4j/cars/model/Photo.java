@@ -8,7 +8,6 @@ import javax.persistence.*;
 @Table(name = "photos")
 @Data
 @ToString
-@NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Photo {
@@ -20,4 +19,12 @@ public class Photo {
     private String name;
 
     private String path;
+
+    public Photo(String name, String path) {
+        this.name = name;
+        this.path = path;
+    }
+
+    public Photo() {
+    }
 }

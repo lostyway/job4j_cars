@@ -1,61 +1,39 @@
 package ru.job4j.cars.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.cars.model.Photo;
+import ru.job4j.cars.utils.TransactionalUtil;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 @Repository
 @RequiredArgsConstructor
-public class PhotoRepository {
-    private final SessionFactory sf;
+public class PhotoRepository implements IPhotoRepository {
+    private final TransactionalUtil tx;
 
+
+    @Override
     public Photo save(Photo photo) {
-        txVoid(session -> session.save(photo));
-        return photo;
-    }
-
-    public Optional<Photo> findById(int id) {
-        return Optional.ofNullable(txReturn(session -> session.get(Photo.class, id)));
-    }
-
-    public void deleteById(int id) {
-        txVoid(session -> {
-            Photo photoToDelete = session.get(Photo.class, id);
-            if (photoToDelete != null) {
-                session.delete(photoToDelete);
-            }
+        return tx.txResult(session -> {
+            session.save(photo);
+            return photo;
         });
     }
 
-    public void txVoid(Consumer<Session> command) {
-        Session session = sf.openSession();
-        try (session) {
-            session.beginTransaction();
-            command.accept(session);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            throw e;
-        }
+    @Override
+    public Optional<Photo> findById(int id) {
+        return Optional.ofNullable(tx.txResult(session -> session.get(Photo.class, id)));
     }
 
-    public Photo txReturn(Function<Session, Photo> function) {
-        Session session = sf.openSession();
-        Photo result;
-        try (session) {
-            session.beginTransaction();
-            result = function.apply(session);
-            session.getTransaction().commit();
-            return result;
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            throw e;
-        }
+    @Override
+    public void deleteById(int id) {
+        tx.txVoid(session -> session.delete(session.get(Photo.class, id)));
+    }
+
+    @Override
+    public List<Photo> findAll() {
+        return tx.txResult(session -> session.createQuery("from Photo", Photo.class).list());
     }
 }

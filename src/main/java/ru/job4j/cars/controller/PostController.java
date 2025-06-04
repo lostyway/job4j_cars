@@ -2,22 +2,28 @@ package ru.job4j.cars.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import ru.job4j.cars.dto.PhotoDto;
 import ru.job4j.cars.exception.NotFoundException;
 import ru.job4j.cars.model.Car;
+import ru.job4j.cars.model.Photo;
 import ru.job4j.cars.model.Post;
 import ru.job4j.cars.repository.*;
 import ru.job4j.cars.service.CarService;
+import ru.job4j.cars.service.PhotoService;
 import ru.job4j.cars.service.PostService;
 import ru.job4j.cars.service.UserService;
 
 import java.time.Year;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -33,6 +39,7 @@ public class PostController {
     private final UserService userService;
     private final PostService postService;
     private final EngineRepository engineRepository;
+    private final PhotoService photoService;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -72,9 +79,16 @@ public class PostController {
     }
 
     @PostMapping("/post/save")
-    public String createPost(@ModelAttribute Post post, Model model) {
+    public String createPost(@ModelAttribute Post post, @RequestParam("photo") List<MultipartFile> photos, Model model) {
         try {
             //TODO Сделать добавление фотографий
+            for (MultipartFile photo : photos) {
+                if (!photo.isEmpty()) {
+                    PhotoDto photoDto = new PhotoDto(photo.getOriginalFilename(), photo.getBytes());
+                    Photo savedPhoto = photoService.save(photoDto);
+                    post.getPhotos().add(savedPhoto);
+                }
+            }
             //TODO Позже изменить на user из сессии (HttpSession).
             post.setAuthor(userService.findById(post.getAuthor().getId()));
             Car car = carService.save(post.getCar());
@@ -89,5 +103,30 @@ public class PostController {
             log.error(e.getMessage(), e);
             return "errors/404";
         }
+    }
+
+    @GetMapping("/photo/{id}")
+    public ResponseEntity<byte[]> getPhoto(@PathVariable int id) {
+        Optional<PhotoDto> photoOpt = photoService.getPhotoById(id);
+        if (photoOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        PhotoDto dto = photoOpt.get();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=" + dto.getName())
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(dto.getContent());
+    }
+
+    @PostMapping("/photo/upload")
+    public ResponseEntity<?> uploadPhotos(@RequestParam("photo") MultipartFile[] files) {
+        for (MultipartFile file : files) {
+            if (!file.isEmpty()) {
+                photoService.save(photoService.convertToPhotoDto(file));
+                return ResponseEntity.ok("Файлы загружены");
+            }
+        }
+        return ResponseEntity.ok("Файлы загружены");
     }
 }

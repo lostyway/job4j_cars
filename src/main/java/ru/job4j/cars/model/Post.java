@@ -16,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "auto_post")
 @EqualsAndHashCode(of = "id")
+@ToString(of = {"id", "description", "created", "price", "sold", "author", "car"})
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

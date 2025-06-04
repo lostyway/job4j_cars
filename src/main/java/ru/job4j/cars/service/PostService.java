@@ -49,6 +49,6 @@ public class PostService implements IService<Post, Integer> {
 
     @Override
     public List<Post> findAll() {
-        return postRepository.findAllOrderById();
+        return postRepository.findAllPostOrderById();
     }
 }

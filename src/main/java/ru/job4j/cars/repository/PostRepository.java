@@ -4,10 +4,26 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.cars.model.Post;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
-public class PostRepository extends AbstractCrudRepository<Post, Integer>{
+public class PostRepository extends AbstractCrudRepository<Post, Integer> {
 
     public PostRepository(SessionFactory sf) {
         super(sf, Post.class, "id");
+    }
+
+    public List<Post> findAllPostOrderById() {
+        return txReturn(session -> session
+                .createQuery("""
+                        select distinct p from Post p
+                        left join fetch p.photos
+                        left join fetch p.author
+                        left join fetch p.car
+                        order by p.id
+                        """
+                , Post.class)
+                .list());
     }
 }

@@ -24,8 +24,9 @@
             <p>Нет фото</p>
         </div>
         <div th:each="photo : ${post.photos}">
-            <img th:src="@{|/images/${photo.name}|}" alt="Фото" style="max-width: 200px; max-height: 200px;" />
+            <img th:src="@{/photo/{id}(id=${photo.id})}" width="300"/>
         </div>
+
     </div>
 
     <div>
