@@ -3,7 +3,6 @@ package ru.job4j.cars.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +13,7 @@ import java.util.Set;
 @Table(name = "car")
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(of = {"id", "year", "mark", "model", "engine"})
 public class Car {
 
     @Id

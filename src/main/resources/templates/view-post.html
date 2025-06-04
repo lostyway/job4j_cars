@@ -14,47 +14,51 @@
     <p><strong>Цена:</strong> <span th:text="${post.price}">0</span> ₽</p>
     <p><strong>Продано:</strong> <span th:text="${post.isSold ? 'Да' : 'Нет'}">Нет</span></p>
 
-    <p><strong>Автор:</strong> <span th:text="${post.author.name}">Имя</span></p>
+    <p><strong>Автор:</strong> <span th:text="${post.author.login}">Имя</span></p>
     <p><strong>Марка:</strong> <span th:text="${post.car.mark.name}">Марка</span></p>
-    <p><strong>Модель:</strong> <span th:text="${post.car.name}">Модель</span></p>
+    <p><strong>Модель:</strong> <span th:text="${post.car.model.name}">Модель</span></p>
 
     <div>
         <strong>Фото:</strong>
-        <div th:if="${#lists.isEmpty(post.photos)}">
+        <div th:if="${#sets.isEmpty(post.photos)}">
             <p>Нет фото</p>
         </div>
-        <div th:each="photo : ${post.photos}">
-            <img th:src="@{/photo/{id}(id=${photo.id})}" width="300"/>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+            <div th:each="photo : ${post.photos}" style="flex: 0 1 auto;">
+                <img th:src="@{/photo/{id}(id=${photo.id})}"
+                     alt="Фото"
+                     style="max-width: 300px; max-height: 200px; object-fit: contain; border: 1px solid #ccc; padding: 5px;" />
+            </div>
         </div>
-
     </div>
 
-    <div>
-        <strong>История цен:</strong>
-        <table>
-            <thead>
-            <tr>
-                <th>Дата</th>
-                <th>Старая цена</th>
-                <th>Новая цена</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="history : ${post.priceHistory}">
-                <td th:text="${#temporals.format(history.created, 'dd.MM.yyyy HH:mm')}">Дата</td>
-                <td th:text="${history.before}">0</td>
-                <td th:text="${history.after}">0</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+<!--    <div>-->
+<!--        <strong>История цен:</strong>-->
+<!--        <table>-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <th>Дата</th>-->
+<!--                <th>Старая цена</th>-->
+<!--                <th>Новая цена</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr th:each="history : ${post.priceHistory}">-->
+<!--                <td th:text="${#temporals.format(history.created, 'dd.MM.yyyy HH:mm')}">Дата</td>-->
+<!--                <td th:text="${history.before}">0</td>-->
+<!--                <td th:text="${history.after}">0</td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
+<!--    </div>-->
 
-    <div>
-        <strong>Подписчики:</strong>
-        <ul>
-            <li th:each="user : ${post.subscribers}" th:text="${user.name}">Имя</li>
-        </ul>
-    </div>
+<!--    <div>-->
+<!--        <strong>Подписчики:</strong>-->
+<!--        <ul>-->
+<!--            <li th:each="user : ${post.subscribers}" th:text="${user.name}">Имя</li>-->
+<!--        </ul>-->
+<!--    </div>-->
 </div>
 
 </body>

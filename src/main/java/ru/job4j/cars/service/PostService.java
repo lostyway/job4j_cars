@@ -40,7 +40,7 @@ public class PostService implements IService<Post, Integer> {
 
     @Override
     public Post findById(Integer id) {
-        var post = postRepository.findById(id);
+        var post = postRepository.findPostById(id);
         if (post.isEmpty()) {
             throw new NotFoundException("Пост не был найден");
         }

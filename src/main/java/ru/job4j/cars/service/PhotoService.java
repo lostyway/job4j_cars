@@ -1,6 +1,6 @@
 package ru.job4j.cars.service;
 
-import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static java.nio.file.Files.createDirectories;
 
+@Slf4j
 @Service
 public class PhotoService implements IPhotoService {
     private final PhotoRepository photoRepository;
@@ -68,6 +69,7 @@ public class PhotoService implements IPhotoService {
             return Optional.empty();
         }
         var content = readAllAsBytes(photoOptional.get().getPath());
+        log.info("Фото '{}' загружено. Размер: {} байт", photoOptional.get().getName(), content.length);
         return Optional.of(new PhotoDto(photoOptional.get().getName(), content));
     }
 
