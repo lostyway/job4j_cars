@@ -25,7 +25,7 @@
 
 ✅ Сущности: User, Model, Mark, Car, Post (аннотации, связи)
 
-❌ Репозитории: AbstractCrudRepository + конкретные методы (findById, findAll, findByUser, …
+✅ Репозитории: AbstractCrudRepository + конкретные методы (findById, findAll, findByUser, …
 
 ❌ Сервисы: UserService (регистрация, аутентификация), PostService (создать, найти, пометить «продано»)
 
