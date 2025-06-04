@@ -23,9 +23,9 @@
     <td th:text="${post.sold ? 'Продано' : 'В продаже'}"></td>
     <td>
       <div>
-        Марка: <span th:text="${post.car.brand}"></span><br>
-        Модель: <span th:text="${post.car.model}"></span><br>
-        Тип: <span th:text="${post.car.bodyType}"></span>
+        Марка: <span th:text="${post.car.mark.name}"></span><br>
+        Модель: <span th:text="${post.car.model.name}"></span><br>
+        Год выпуска: <span th:text="${post.car.model.year}"></span><br>
       </div>
     </td>
     <td th:text="${post.user.username}"></td>
@@ -34,7 +34,7 @@
   </tbody>
 </table>
 <br>
-<a href="/posts/add">Добавить новое объявление</a>
+<a href="/post/create">Добавить новое объявление</a>
 <footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

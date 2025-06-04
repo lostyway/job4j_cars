@@ -29,7 +29,7 @@ public class Post {
     private long price;
 
     @Column(name = "is_sold")
-    private boolean isSold;
+    private boolean sold;
 
     @ManyToMany
     @JoinTable(name = "post_photos",
