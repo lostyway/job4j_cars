@@ -1,9 +1,6 @@
 package ru.job4j.cars.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 @Data
+@Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,6 +24,9 @@ public class Post {
     private String description;
 
     private LocalDateTime created;
+
+    @Column(nullable = false)
+    private long price;
 
     @Column(name = "is_sold")
     private boolean isSold;

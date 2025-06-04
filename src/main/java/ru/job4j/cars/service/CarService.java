@@ -29,18 +29,19 @@ public class CarService implements IService<Car, Integer> {
     }
 
     @Override
-    public void delete(Integer id) {
-        carRepository.delete(id);
-    }
-
-    @Override
-    public boolean update(Car car) {
+    public boolean update(Car car, int id) {
         try {
+            car.setId(id);
             carRepository.update(car);
             return true;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public void delete(Integer id) {
+        carRepository.delete(id);
     }
 
     @Override

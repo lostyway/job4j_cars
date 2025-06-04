@@ -1,14 +1,12 @@
 package ru.job4j.cars.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Data
 @Entity
+@Builder
 @Table(name = "auto_user")
 @EqualsAndHashCode
 @NoArgsConstructor
