@@ -44,6 +44,15 @@ public class UserService implements IService<User, Integer> {
                 .orElseThrow(() -> new NotFoundException(String.format("Пользователь '%d' не был найден: ", id)));
     }
 
+    public User findByLoginAndPassword(String login, String password) {
+        if (login == null || password == null || login.isEmpty() || password.isEmpty()) {
+            throw new IllegalArgumentException("Логин и пароль не могут быть пустыми!");
+        }
+
+        return userRepository.findByLoginAndPassword(login, password)
+                .orElseThrow(() -> new NotFoundException("Не удалось найти пользователя с таким логином и паролем"));
+    }
+
     @Override
     public List<User> findAll() {
         return userRepository.findAllOrderById();

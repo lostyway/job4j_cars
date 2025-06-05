@@ -38,4 +38,11 @@ public class UserRepository extends AbstractCrudRepository<User, Integer> {
                 -> session.createQuery("from User where login = :login", User.class)
                 .setParameter("login", login).list().stream().findFirst());
     }
+
+    public Optional<User> findByLoginAndPassword(String login, String password) {
+        return txReturn(session -> session.createQuery("from User where login = :login and password = :password", User.class)
+                .setParameter("login", login)
+                .setParameter("password", password)
+                .uniqueResultOptional());
+    }
 }

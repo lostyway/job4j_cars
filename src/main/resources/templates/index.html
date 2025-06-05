@@ -1,15 +1,24 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
-  <title>LostCar - поиск машин</title>
   <meta charset="UTF-8">
+  <title>Объявления</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
 </head>
 <body>
+
+<!-- Навигационное меню -->
 <div th:replace="fragments/navigation :: navigation"></div>
+
 <h1>Объявления по продаже машин</h1>
 
+<!-- Ссылка на создание нового объявления -->
+<a th:href="@{/post/create}">Новое объявление</a>
+
+<table>
   <thead>
   <tr>
+    <th>Фото</th>
     <th>Описание</th>
     <th>Статус</th>
     <th>Машина</th>
@@ -19,22 +28,32 @@
   </thead>
   <tbody>
   <tr th:each="post : ${posts}">
-    <td th:text="${post.description}"></td>
+    <td>
+      <img th:if="${post.photos != null and !post.photos.isEmpty()}"
+           th:src="@{/photo/{id}(id=${post.photos.iterator().next().id})}"
+           alt="Фото"
+           width="150" height="100"/>
+      <span th:if="${post.photos == null or post.photos.isEmpty()}">Нет фото</span>
+    </td>
+    <td>
+      <a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.description}"></a>
+    </td>
     <td th:text="${post.sold ? 'Продано' : 'В продаже'}"></td>
     <td>
       <div>
         Марка: <span th:text="${post.car.mark.name}"></span><br>
         Модель: <span th:text="${post.car.model.name}"></span><br>
-        Год выпуска: <span th:text="${post.car.model.year}"></span><br>
+        Год выпуска: <span th:text="${post.car.year}"></span><br>
       </div>
     </td>
-    <td th:text="${post.user.username}"></td>
-    <td th:text="${post.created}"></td>
+    <td th:text="${post.author.login}"></td>
+    <td th:text="${#temporals.format(post.created, 'dd.MM.yyyy HH:mm')}"></td>
   </tr>
   </tbody>
 </table>
-<br>
-<a href="/post/create">Добавить новое объявление</a>
-<footer th:replace="fragments/footer :: footer"></footer>
+
+<!-- Футер -->
+<footer th:include="fragments/footer :: footer"></footer>
+
 </body>
 </html>
