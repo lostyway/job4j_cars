@@ -1,5 +1,7 @@
 package ru.job4j.cars.controller;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Slf4j
 @Controller
@@ -53,6 +56,12 @@ public class PostController {
 
             boolean isAdmin = isOwner(session, post);
             model.addAttribute("isAdmin", isAdmin);
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            String priceHistoryJson = mapper.writeValueAsString(post.getPriceHistory());
+            model.addAttribute("priceHistoryJson", priceHistoryJson);
 
             return "view-post";
         } catch (NotFoundException e) {
@@ -103,8 +112,7 @@ public class PostController {
             PriceHistory priceHistory = new PriceHistory();
             priceHistory.setPrice(price);
             priceHistory.setPost(post);
-            PriceHistory savedHistory = priceService.save(priceHistory);
-            post.getPriceHistory().add(savedHistory);
+            priceService.save(priceHistory);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

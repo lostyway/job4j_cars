@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
     <title>Детали объявления</title>
-    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 
@@ -16,13 +18,15 @@
 
 <div class="container">
     <div class="card">
+        <!-- Заголовок -->
         <div class="flex justify-between align-center mb-20">
             <h1>Информация об объявлении</h1>
             <div th:if="${isAdmin}">
-                <a th:href="@{/post/update/{id}(id=${post.id})}" class="btn">Редактировать</a>
+                <a th:href="@{/post/update/{id}(id=${post.id})}" class="btn-edit">Редактировать</a>
             </div>
         </div>
 
+        <!-- Детали объявления -->
         <div class="post-details">
             <div class="post-header">
                 <h2 th:text="${post.description}" class="mb-20"></h2>
@@ -34,9 +38,18 @@
             <div class="grid two-columns">
                 <div class="detail-item">
                     <h3>Основная информация</h3>
-                    <p><strong>Цена:</strong> <span th:text="${post.price} + ' ₽'"></span></p>
-                    <p><strong>Дата создания:</strong> <span th:text="${#temporals.format(post.created, 'dd.MM.yyyy HH:mm')}"></span></p>
-                    <p><strong>Автор:</strong> <span th:text="${post.author.login}"></span></p>
+                    <p>
+                        <strong>Дата создания:</strong>
+                        <span th:text="${#temporals.format(post.created, 'dd.MM.yyyy HH:mm')}"></span>
+                    </p>
+                    <p>
+                        <strong>Автор:</strong>
+                        <span th:text="${post.author.login}"></span>
+                    </p>
+                    <p>
+                        <strong>Цена:</strong>
+                        <span th:text="${#numbers.formatDecimal(post.price, 0, 'POINT', 2, 'POINT')} + ' ₽'">- ₽</span>
+                    </p>
                 </div>
 
                 <div class="detail-item">
@@ -48,40 +61,44 @@
                 </div>
             </div>
 
+            <!-- Блок с графиком -->
+            <div class="detail-item mt-30">
+                <h3>График изменения цены</h3>
+                <div class="chart-container">
+                    <canvas id="priceChart"></canvas>
+                </div>
+            </div>
+
+
             <div class="detail-item mt-30">
                 <h3>Фотографии</h3>
                 <div th:if="${#sets.isEmpty(post.photos)}" class="no-photos">
                     <p>Нет фотографий</p>
                 </div>
-
-                <div class="img-gallery">
-                    <div th:each="photo : ${post.photos}">
-                        <img th:src="@{/photo/{id}(id=${photo.id})}" alt="Фото автомобиля" class="gallery-image"/>
+                <div th:unless="${#sets.isEmpty(post.photos)}" class="carousel-container">
+                    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div th:each="photo, iterStat : ${post.photos}"
+                                 th:classappend="${iterStat.first} ? 'active' : ''"
+                                 class="carousel-item">
+                                <img th:src="@{/photo/{id}(id=${photo.id})}"
+                                     class="d-block w-100 carousel-image"
+                                     alt="Фото автомобиля">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
+                                data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Назад</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
+                                data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Вперед</span>
+                        </button>
                     </div>
                 </div>
             </div>
-
-            <div class="detail-item mt-30">
-                <h3>История изменения цены</h3>
-                <div th:if="${#lists.isEmpty(post.priceHistory)}">
-                    <p>История цен отсутствует</p>
-                </div>
-                <table th:if="${!#lists.isEmpty(post.priceHistory)}" class="price-history-table">
-                    <thead>
-                    <tr>
-                        <th>Дата</th>
-                        <th>Цена (₽)</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="entry : ${post.priceHistory}">
-                        <td th:text="${#temporals.format(entry.created, 'dd.MM.yyyy HH:mm')}"></td>
-                        <td th:text="${entry.price}"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
         </div>
 
         <div class="mt-30">
@@ -95,6 +112,103 @@
         <div th:replace="fragments/footer :: footer"></div>
     </div>
 </footer>
+
+<!-- Скрипт с chart.js -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // 1) Выводим «сырой» JSON (для отладки, можно убрать)
+    console.log("Raw JSON:", /*[[${priceHistoryJson}]]*/ '[]');
+
+    // 2) Разбираем строку в настоящий массив объектов
+    const priceHistory = JSON.parse(/*[[${priceHistoryJson}]]*/ '[]');
+    console.log("Parsed:", priceHistory);
+
+    // 3) Собираем метки (даты) и данные (цены)
+    const labels = priceHistory.map(p => {
+        return new Date(p.created).toLocaleString('ru-RU', {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    });
+
+    const data = priceHistory.map(p => p.price);
+
+    // 4) Функция для форматирования «русской» цены
+    const formatPrice = value => new Intl.NumberFormat('ru-RU').format(value) + ' ₽';
+
+    // Очистка canvas, если график уже есть
+    const canvas = document.getElementById('priceChart');
+    const ctx = canvas.getContext('2d');
+
+    // Удалим старый график, если он уже существует
+    if (window.priceChartInstance) {
+        window.priceChartInstance.destroy();
+    }
+
+    // Создаем график и сохраняем ссылку глобально
+    window.priceChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Цена',
+                data: data,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: ctx => formatPrice(ctx.parsed.y)
+                    }
+                },
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Дата',
+                        font: { weight: 'bold' }
+                    },
+                    grid: { display: false },
+                    ticks: { maxRotation: 45, minRotation: 45 }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Цена (₽)',
+                        font: { weight: 'bold' }
+                    },
+                    ticks: {
+                        callback: value => formatPrice(value)
+                    },
+                    beginAtZero: false,
+                    grid: {
+                        color: context => context.tick.value === 0
+                            ? 'rgba(0, 0, 0, 0.1)'
+                            : 'rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            },
+            animation: {
+                duration: 0
+            }
+        }
+    });
+    /*]]>*/
+</script>
 
 </body>
 </html>

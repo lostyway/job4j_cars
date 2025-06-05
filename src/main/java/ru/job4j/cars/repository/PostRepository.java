@@ -34,7 +34,7 @@ public class PostRepository extends AbstractCrudRepository<Post, Integer> {
                                 left join fetch p.photos
                                 left join fetch p.author
                                 left join fetch p.car
-                                left join fetch p.priceHistory
+                                left join fetch p.priceHistory ph
                                 where p.id = :id
                                 """
                         , Post.class)

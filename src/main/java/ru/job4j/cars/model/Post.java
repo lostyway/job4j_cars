@@ -4,10 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Builder
@@ -41,7 +38,8 @@ public class Post {
     private User author;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PriceHistory> priceHistory = new ArrayList<>();
+    @OrderBy("created ASC")
+    private Set<PriceHistory> priceHistory = new LinkedHashSet<>();
 
     @ManyToMany
     @JoinTable(
