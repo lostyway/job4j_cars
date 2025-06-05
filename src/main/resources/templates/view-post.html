@@ -116,10 +116,7 @@
 <!-- Скрипт с chart.js -->
 <script th:inline="javascript">
     /*<![CDATA[*/
-    // 1) Выводим «сырой» JSON (для отладки, можно убрать)
-    console.log("Raw JSON:", /*[[${priceHistoryJson}]]*/ '[]');
 
-    // 2) Разбираем строку в настоящий массив объектов
     const priceHistory = JSON.parse(/*[[${priceHistoryJson}]]*/ '[]');
     console.log("Parsed:", priceHistory);
 
@@ -133,19 +130,16 @@
 
     const data = priceHistory.map(p => p.price);
 
-    // 4) Функция для форматирования «русской» цены
     const formatPrice = value => new Intl.NumberFormat('ru-RU').format(value) + ' ₽';
 
     // Очистка canvas, если график уже есть
     const canvas = document.getElementById('priceChart');
     const ctx = canvas.getContext('2d');
 
-    // Удалим старый график, если он уже существует
     if (window.priceChartInstance) {
         window.priceChartInstance.destroy();
     }
 
-    // Создаем график и сохраняем ссылку глобально
     window.priceChartInstance = new Chart(ctx, {
         type: 'line',
         data: {

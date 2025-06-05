@@ -3,14 +3,12 @@ package ru.job4j.cars.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Data
 @Builder
+@Table(name = "cars")
 @EqualsAndHashCode(of = "id")
-@Table(name = "car")
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(of = {"id", "year", "mark", "model", "engine"})
@@ -20,6 +18,7 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "year")
     private String year;
 
     @ManyToOne

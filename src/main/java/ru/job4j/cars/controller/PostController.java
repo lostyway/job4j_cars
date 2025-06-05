@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Slf4j
@@ -189,6 +190,7 @@ public class PostController {
     @GetMapping("/photo/{id}")
     public ResponseEntity<byte[]> getPhoto(@PathVariable int id) {
         Optional<PhotoDto> photoOpt = photoService.getPhotoById(id);
+
         if (photoOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

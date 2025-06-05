@@ -52,4 +52,14 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "car_id")
     private Car car;
+
+    public Post(int i, String desc1, LocalDateTime localDateTime, int i1, boolean b, User user, Car car) {
+        this.id = i;
+        this.description = desc1;
+        this.created = localDateTime;
+        this.price = i1;
+        this.sold = b;
+        this.author = user;
+        this.car = car;
+    }
 }
