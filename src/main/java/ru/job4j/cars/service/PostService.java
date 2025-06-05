@@ -26,6 +26,8 @@ public class PostService implements IService<Post, Integer> {
     public boolean update(Post post, int id) {
         try {
             post.setId(id);
+            Post postToTime = findById(id);
+            post.setCreated(postToTime.getCreated());
             postRepository.update(post);
             return true;
         } catch (Exception e) {
@@ -49,6 +51,6 @@ public class PostService implements IService<Post, Integer> {
 
     @Override
     public List<Post> findAll() {
-        return postRepository.findAllPostOrderById();
+        return postRepository.findAllOrderByTimeDesc();
     }
 }

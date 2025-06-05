@@ -7,7 +7,9 @@
 </head>
 <body>
 <h1>Информация об объявлении</h1>
-
+<div th:if="${isAdmin}">
+    <a th:href="@{/post/update/{id}(id=${post.id})}">Редактировать объявление</a>
+</div>
 <div>
     <h2 th:text="${post.description}">Описание</h2>
     <p><strong>Создано:</strong> <span th:text="${#temporals.format(post.created, 'dd.MM.yyyy HH:mm')}">Дата</span></p>
@@ -34,24 +36,24 @@
     </div>
 
 <!--    <div>-->
-<!--        <strong>История цен:</strong>-->
-<!--        <table>-->
-<!--            <thead>-->
-<!--            <tr>-->
-<!--                <th>Дата</th>-->
-<!--                <th>Старая цена</th>-->
-<!--                <th>Новая цена</th>-->
-<!--            </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            <tr th:each="history : ${post.priceHistory}">-->
-<!--                <td th:text="${#temporals.format(history.created, 'dd.MM.yyyy HH:mm')}">Дата</td>-->
-<!--                <td th:text="${history.before}">0</td>-->
-<!--                <td th:text="${history.after}">0</td>-->
-<!--            </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
-<!--    </div>-->
+<!--            <strong>История цен:</strong>-->
+<!--            <table>-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th>Дата</th>-->
+<!--                    <th>Старая цена</th>-->
+<!--                    <th>Новая цена</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr th:each="history : ${post.priceHistory}">-->
+<!--                    <td th:text="${#temporals.format(history.created, 'dd.MM.yyyy HH:mm')}">Дата</td>-->
+<!--                    <td th:text="${history.before}">0</td>-->
+<!--                    <td th:text="${history.after}">0</td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
+<!--        </div>-->
 
 <!--    <div>-->
 <!--        <strong>Подписчики:</strong>-->

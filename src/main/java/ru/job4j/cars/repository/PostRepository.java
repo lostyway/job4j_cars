@@ -40,4 +40,17 @@ public class PostRepository extends AbstractCrudRepository<Post, Integer> {
                 .setParameter("id", id)
                 .uniqueResultOptional());
     }
+
+    public List<Post> findAllOrderByTimeDesc() {
+        return txReturn(session -> session
+                .createQuery("""
+                                select distinct p from Post p
+                                left join fetch p.photos
+                                left join fetch p.author
+                                left join fetch p.car
+                                order by p.created desc
+                                """
+                        , Post.class)
+                .list());
+    }
 }

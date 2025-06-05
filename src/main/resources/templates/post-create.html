@@ -65,16 +65,6 @@
         </div>
 
         <div>
-            <label for="author">Автор:</label>
-            <select id="author" name="author.id" required>
-                <option th:each="user : ${users}"
-                        th:value="${user.id}"
-                        th:text="${user.login}">Пользователь
-                </option>
-            </select>
-        </div>
-
-        <div>
             <input type="file" name="photo" multiple />
         </div>
 

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать объявление</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+
+<div th:replace="fragments/navigation :: navigation"></div>
+
+<h2>Редактировать объявление</h2>
+
+<form th:action="@{/post/update}" th:object="${post}" method="post" enctype="multipart/form-data">
+    <input type="hidden" th:field="*{id}"/>
+
+    <div>
+        <label for="description">Описание:</label><br>
+        <textarea id="description" th:field="*{description}" rows="5" cols="50" required></textarea>
+    </div>
+
+    <div>
+        <label for="price">Цена (₽):</label>
+        <input type="number" id="price" th:field="*{price}" min="0" required>
+    </div>
+
+    <fieldset>
+        <legend>Информация об автомобиле</legend>
+
+        <div>
+            <label for="mark">Марка:</label>
+            <select id="mark" name="car.mark.id" required>
+                <option th:each="mark : ${marks}"
+                        th:value="${mark.id}"
+                        th:selected="${mark.id} == ${post.car.mark.id}"
+                        th:text="${mark.name}">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label for="model">Модель:</label>
+            <select id="model" name="car.model.id" required>
+                <option th:each="model : ${models}"
+                        th:value="${model.id}"
+                        th:selected="${model.id} == ${post.car.model.id}"
+                        th:text="${model.name}">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label for="year">Год выпуска:</label>
+            <select id="year" name="car.year" required>
+                <option th:each="year : ${years}"
+                        th:value="${year}"
+                        th:selected="${year} == ${post.car.year}"
+                        th:text="${year}">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label for="engine">Двигатель:</label>
+            <select id="engine" name="car.engine.id" required>
+                <option th:each="engine : ${engines}"
+                        th:value="${engine.id}"
+                        th:selected="${engine.id} == ${post.car.engine.id}"
+                        th:text="${engine.name}">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label for="sold">Статус:</label>
+            <select id="sold" th:field="*{sold}">
+                <option th:value="false" th:text="'В продаже'" th:selected="!${post.sold}"></option>
+                <option th:value="true" th:text="'Продано'" th:selected="${post.sold}"></option>
+            </select>
+        </div>
+
+        <div>
+            <label>Текущие фото:</label>
+            <div th:if="${#sets.isEmpty(post.photos)}">
+                <p>Нет фото</p>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+            <div th:each="photo : ${post.photos}" style="flex: 0 1 auto;">
+                <img th:src="@{/photo/{id}(id=${photo.id})}"
+                     alt="Фото"
+                     style="max-width: 300px; max-height: 200px; object-fit: contain; border: 1px solid #ccc; padding: 5px;" />
+            </div>
+        </div>
+
+        <div>
+            <label for="photo">Добавить новые фото:</label>
+            <input type="file" id="photo" name="photo" multiple />
+        </div>
+
+
+    </fieldset>
+
+    <div>
+        <button type="submit">Сохранить изменения</button>
+    </div>
+</form>
+
+<a th:href="@{/post/{id}(id=${post.id})}">Назад к объявлению</a>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+
+</body>
+</html>
