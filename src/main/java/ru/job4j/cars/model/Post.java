@@ -25,7 +25,7 @@ public class Post {
     private LocalDateTime created = LocalDateTime.now();
 
     @Column(nullable = false)
-    private long price;
+    private Long price;
 
     @Column(name = "is_sold")
     private boolean sold;
@@ -53,11 +53,11 @@ public class Post {
     @JoinColumn(name = "car_id")
     private Car car;
 
-    public Post(int i, String desc1, LocalDateTime localDateTime, int i1, boolean b, User user, Car car) {
+    public Post(int i, String desc1, LocalDateTime localDateTime, long price, boolean b, User user, Car car) {
         this.id = i;
         this.description = desc1;
         this.created = localDateTime;
-        this.price = i1;
+        this.price = price;
         this.sold = b;
         this.author = user;
         this.car = car;

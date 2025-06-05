@@ -2,7 +2,6 @@ package ru.job4j.cars.repository;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import ru.job4j.cars.model.Engine;
 
 import java.util.List;

@@ -3,9 +3,9 @@ package ru.job4j.cars.repository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.*;
 import ru.job4j.cars.utils.TransactionalUtil;
+import utils.HibernateSessionFactoryUtil;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractRepositoryTest<T> {
@@ -18,7 +18,7 @@ public abstract class AbstractRepositoryTest<T> {
 
     @BeforeAll
     void setupFactory() {
-        sf = new Configuration().configure().buildSessionFactory();
+        sf = HibernateSessionFactoryUtil.getSessionFactory();
         tx = new TransactionalUtil(sf);
     }
 
@@ -41,13 +41,6 @@ public abstract class AbstractRepositoryTest<T> {
         }
         if (session != null && session.isOpen()) {
             session.close();
-        }
-    }
-
-    @AfterAll
-    void closeFactory() {
-        if (sf != null && !sf.isClosed()) {
-            sf.close();
         }
     }
 }

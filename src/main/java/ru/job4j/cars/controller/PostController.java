@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.job4j.cars.GlobalExceptionMessage;
 import ru.job4j.cars.dto.PhotoDto;
 import ru.job4j.cars.exception.NotFoundException;
 import ru.job4j.cars.model.*;
@@ -42,6 +43,7 @@ public class PostController {
     private final EngineRepository engineRepository;
     private final PhotoService photoService;
     private final PriceService priceService;
+    private static final String EXCEPTION = GlobalExceptionMessage.GLOBAL_EXCEPTION_MESSAGE.toString();
 
     @GetMapping("/")
     public String index(Model model) {
@@ -69,7 +71,7 @@ public class PostController {
             model.addAttribute("error", e.getMessage());
             return "errors/404";
         } catch (Exception e) {
-            model.addAttribute("error", "Произошла непредвиденная ошибка");
+            model.addAttribute("error", EXCEPTION);
             log.error(e.getMessage(), e);
             return "errors/404";
         }
@@ -92,17 +94,18 @@ public class PostController {
     @PostMapping("/post/save")
     public String createPost(@ModelAttribute Post post, @RequestParam("photo") List<MultipartFile> photos, Model model, HttpSession session) {
         try {
+            validatePost(post);
             saveCar(post);
             saveAuthor(post, session);
             Post postResult = postService.save(post);
             savePriceHistory(postResult, post.getPrice());
             savePhotos(postResult, photos);
             return "redirect:/post/" + postResult.getId();
-        } catch (NotFoundException e) {
+        } catch (NotFoundException | IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
             return "errors/404";
         } catch (Exception e) {
-            model.addAttribute("error", "Произошла непредвиденная ошибка");
+            model.addAttribute("error", EXCEPTION);
             log.error(e.getMessage(), e);
             return "errors/404";
         }
@@ -140,6 +143,7 @@ public class PostController {
     @PostMapping("/post/update")
     public String submitPostUpdate(@ModelAttribute Post post, @RequestParam("photo") List<MultipartFile> photos, Model model, HttpSession session) {
         try {
+            validatePost(post);
             Post oldPost = postService.findById(post.getId());
             if (!checkOldPriceEqualsNew(oldPost.getPrice(), post.getPrice())) {
                 savePriceHistory(post, post.getPrice());
@@ -181,7 +185,7 @@ public class PostController {
             model.addAttribute("error", e.getMessage());
             return "errors/404";
         } catch (Exception e) {
-            model.addAttribute("error", "Произошла непредвиденная ошибка");
+            model.addAttribute("error", EXCEPTION);
             log.error(e.getMessage(), e);
             return "errors/404";
         }
@@ -262,6 +266,12 @@ public class PostController {
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void validatePost(Post post) {
+        if (post == null || post.getPrice() == null || post.getPrice() < 0 || post.getPrice() > 1000000000 || post.getDescription() == null || post.getCar() == null || post.getAuthor() == null) {
+            throw new IllegalArgumentException("Данные были заполнены неверно!");
         }
     }
 }
