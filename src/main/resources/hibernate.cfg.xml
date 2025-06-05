@@ -19,7 +19,6 @@
     <mapping class="ru.job4j.cars.model.History" />
     <mapping class="ru.job4j.cars.model.Mark" />
     <mapping class="ru.job4j.cars.model.Model" />
-    <mapping class="ru.job4j.cars.model.Owner" />
     <mapping class="ru.job4j.cars.model.Post" />
     <mapping class="ru.job4j.cars.model.PriceHistory" />
     <mapping class="ru.job4j.cars.model.User" />

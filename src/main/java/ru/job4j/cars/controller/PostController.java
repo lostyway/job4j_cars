@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -36,10 +37,8 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class PostController {
     private final CarService carService;
-    private final PostRepository postRepository;
     private final MarkRepository markRepository;
     private final ModelRepository modelRepository;
-    private final OwnerRepository ownerRepository;
     private final UserService userService;
     private final PostService postService;
     private final EngineRepository engineRepository;
@@ -88,10 +87,10 @@ public class PostController {
     @PostMapping("/post/save")
     public String createPost(@ModelAttribute Post post, @RequestParam("photo") List<MultipartFile> photos, Model model, HttpSession session) {
         try {
-            savePhotos(post, photos);
             saveCar(post);
             saveAuthor(post, session);
             Post postResult = postService.save(post);
+            savePhotos(postResult, photos);
             return "redirect:/post/" + postResult.getId();
         } catch (NotFoundException e) {
             model.addAttribute("error", e.getMessage());
@@ -128,10 +127,14 @@ public class PostController {
             Set<Photo> oldPhotos = oldPost.getPhotos();
             boolean hasNewPhotos = photos != null && photos.stream().anyMatch(p -> !p.isEmpty());
             if (hasNewPhotos) {
+                for (Photo oldPhoto : oldPhotos) {
+                    photoService.deleteById(oldPhoto.getId());
+                }
                 savePhotos(post, photos);
             } else {
                 post.setPhotos(oldPhotos);
             }
+
             saveCar(post);
             saveAuthor(post, session);
 
@@ -143,6 +146,35 @@ public class PostController {
         }
     }
 
+    @PostMapping("/post/delete/{id}")
+    public String deletePost(@PathVariable int id, Model model) {
+        try {
+            Post currentPost = postService.findById(id);
+            if (currentPost == null) {
+                model.addAttribute("error", "Поста не существует");
+                return "errors/404";
+            }
+            Set<Photo> photos = currentPost.getPhotos();
+            if (photos != null && !photos.isEmpty()) {
+                for (Photo photo : photos) {
+                    photoService.deleteById(photo.getId());
+                }
+            }
+            postService.delete(id);
+            Car car = currentPost.getCar();
+            carService.delete(car.getId());
+            System.out.println("Car id is: " + car.getId());
+
+            return "redirect:/";
+        } catch (NotFoundException e) {
+            model.addAttribute("error", e.getMessage());
+            return "errors/404";
+        } catch (Exception e) {
+            model.addAttribute("error", "Произошла непредвиденная ошибка");
+            log.error(e.getMessage(), e);
+            return "errors/404";
+        }
+    }
 
     @GetMapping("/photo/{id}")
     public ResponseEntity<byte[]> getPhoto(@PathVariable int id) {
@@ -159,10 +191,15 @@ public class PostController {
     }
 
     @PostMapping("/photo/upload")
-    public ResponseEntity<?> uploadPhotos(@RequestParam("photo") MultipartFile[] files) {
+    public ResponseEntity<?> uploadPhotos(@RequestParam("photo") MultipartFile[] files, @RequestParam("postId") int postId) {
+        Post post = postService.findById(postId);
+        if (post == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Пост не найден");
+        }
+
         for (MultipartFile file : files) {
             if (!file.isEmpty()) {
-                photoService.save(photoService.convertToPhotoDto(file));
+                photoService.save(photoService.convertToPhotoDto(file), post);
                 return ResponseEntity.ok("Файлы загружены");
             }
         }
@@ -184,7 +221,7 @@ public class PostController {
         for (MultipartFile photo : photos) {
             if (!photo.isEmpty()) {
                 PhotoDto photoDto = new PhotoDto(photo.getOriginalFilename(), photo.getBytes());
-                Photo savedPhoto = photoService.save(photoDto);
+                Photo savedPhoto = photoService.save(photoDto, post);
                 post.getPhotos().add(savedPhoto);
             }
         }

@@ -24,6 +24,7 @@ public class Post {
 
     private String description;
 
+    @Column(updatable = false)
     private LocalDateTime created = LocalDateTime.now();
 
     @Column(nullable = false)
@@ -32,17 +33,14 @@ public class Post {
     @Column(name = "is_sold")
     private boolean sold;
 
-    @ManyToMany
-    @JoinTable(name = "post_photos",
-    joinColumns = {@JoinColumn(name = "post_id")},
-    inverseJoinColumns = {@JoinColumn(name = "photo_id")})
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Photo> photos = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "auto_user_id")
     private User author;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "auto_post_id")
     private List<PriceHistory> priceHistory = new ArrayList<>();
 

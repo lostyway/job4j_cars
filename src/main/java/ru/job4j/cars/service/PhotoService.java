@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.job4j.cars.dto.PhotoDto;
 import ru.job4j.cars.exception.NotFoundException;
 import ru.job4j.cars.model.Photo;
+import ru.job4j.cars.model.Post;
 import ru.job4j.cars.repository.PhotoRepository;
 
 import java.io.IOException;
@@ -31,10 +32,10 @@ public class PhotoService implements IPhotoService {
     }
 
     @Override
-    public Photo save(PhotoDto photoDto) {
+    public Photo save(PhotoDto photoDto, Post post) {
         Path path = Path.of(storageDirectory, photoDto.getName());
         writeAllBytes(path, photoDto.getContent());
-        return photoRepository.save(new Photo(photoDto.getName(), path.toString()));
+        return photoRepository.save(new Photo(photoDto.getName(), path.toString(), post));
     }
 
     private void writeAllBytes(Path path, byte[] content) {

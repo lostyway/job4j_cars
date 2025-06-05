@@ -20,9 +20,14 @@ public class Photo {
 
     private String path;
 
-    public Photo(String name, String path) {
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+
+    public Photo(String name, String path, Post post) {
         this.name = name;
         this.path = path;
+        this.post = post;
     }
 
     public Photo() {
