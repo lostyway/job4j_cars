@@ -13,15 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.job4j.cars.dto.PhotoDto;
 import ru.job4j.cars.exception.NotFoundException;
-import ru.job4j.cars.model.Car;
-import ru.job4j.cars.model.Photo;
-import ru.job4j.cars.model.Post;
-import ru.job4j.cars.model.User;
+import ru.job4j.cars.model.*;
 import ru.job4j.cars.repository.*;
-import ru.job4j.cars.service.CarService;
-import ru.job4j.cars.service.PhotoService;
-import ru.job4j.cars.service.PostService;
-import ru.job4j.cars.service.UserService;
+import ru.job4j.cars.service.*;
 
 import java.io.IOException;
 import java.time.Year;
@@ -43,6 +37,7 @@ public class PostController {
     private final PostService postService;
     private final EngineRepository engineRepository;
     private final PhotoService photoService;
+    private final PriceService priceService;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -90,6 +85,7 @@ public class PostController {
             saveCar(post);
             saveAuthor(post, session);
             Post postResult = postService.save(post);
+            savePriceHistory(postResult, post.getPrice());
             savePhotos(postResult, photos);
             return "redirect:/post/" + postResult.getId();
         } catch (NotFoundException e) {
@@ -99,6 +95,18 @@ public class PostController {
             model.addAttribute("error", "Произошла непредвиденная ошибка");
             log.error(e.getMessage(), e);
             return "errors/404";
+        }
+    }
+
+    private void savePriceHistory(Post post, long price) {
+        try {
+            PriceHistory priceHistory = new PriceHistory();
+            priceHistory.setPrice(price);
+            priceHistory.setPost(post);
+            PriceHistory savedHistory = priceService.save(priceHistory);
+            post.getPriceHistory().add(savedHistory);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -124,6 +132,29 @@ public class PostController {
     public String submitPostUpdate(@ModelAttribute Post post, @RequestParam("photo") List<MultipartFile> photos, Model model, HttpSession session) {
         try {
             Post oldPost = postService.findById(post.getId());
+            if (!checkOldPriceEqualsNew(oldPost.getPrice(), post.getPrice())) {
+                savePriceHistory(post, post.getPrice());
+            }
+            checkPhotosInPost(post, photos);
+            saveCar(post);
+            saveAuthor(post, session);
+
+            postService.update(post, post.getId());
+            carService.delete(oldPost.getCar().getId());
+            return "redirect:/post/" + post.getId();
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "errors/404";
+        }
+    }
+
+    private boolean checkOldPriceEqualsNew(long oldPrice, long newPrice) {
+        return oldPrice == newPrice;
+    }
+
+    private void checkPhotosInPost(Post post, List<MultipartFile> photos) {
+        try {
+            Post oldPost = postService.findById(post.getId());
             Set<Photo> oldPhotos = oldPost.getPhotos();
             boolean hasNewPhotos = photos != null && photos.stream().anyMatch(p -> !p.isEmpty());
             if (hasNewPhotos) {
@@ -134,16 +165,8 @@ public class PostController {
             } else {
                 post.setPhotos(oldPhotos);
             }
-
-            saveCar(post);
-            saveAuthor(post, session);
-
-            postService.update(post, post.getId());
-            carService.delete(oldPost.getCar().getId());
-            return "redirect:/post/" + post.getId();
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            return "errors/404";
+            throw new RuntimeException(e);
         }
     }
 

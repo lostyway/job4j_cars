@@ -23,10 +23,12 @@ public class PriceHistory {
     private int id;
 
     @NotNull
-    private long before;
+    private long price;
 
-    @NotNull
-    private long after;
+    @Column(updatable = false)
+    private LocalDateTime created = LocalDateTime.now();
 
-    private LocalDateTime created;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "auto_post_id", nullable = false)
+    private Post post;
 }

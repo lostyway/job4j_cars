@@ -40,8 +40,7 @@ public class Post {
     @JoinColumn(name = "auto_user_id")
     private User author;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "auto_post_id")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PriceHistory> priceHistory = new ArrayList<>();
 
     @ManyToMany
