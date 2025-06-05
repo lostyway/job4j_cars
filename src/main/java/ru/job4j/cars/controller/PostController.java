@@ -139,6 +139,7 @@ public class PostController {
             saveAuthor(post, session);
 
             postService.update(post, post.getId());
+            carService.delete(oldPost.getCar().getId());
             return "redirect:/post/" + post.getId();
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
