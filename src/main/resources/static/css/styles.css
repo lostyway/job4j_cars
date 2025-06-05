@@ -199,6 +199,24 @@ tr:hover {
     margin-top: 40px;
 }
 
+.price-history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.price-history-table th,
+.price-history-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.price-history-table th {
+    background-color: #f2f2f2;
+}
+
+
 .text-center {
     text-align: center;
 }

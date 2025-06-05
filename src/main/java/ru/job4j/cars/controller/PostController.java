@@ -148,28 +148,6 @@ public class PostController {
         }
     }
 
-    private boolean checkOldPriceEqualsNew(long oldPrice, long newPrice) {
-        return oldPrice == newPrice;
-    }
-
-    private void checkPhotosInPost(Post post, List<MultipartFile> photos) {
-        try {
-            Post oldPost = postService.findById(post.getId());
-            Set<Photo> oldPhotos = oldPost.getPhotos();
-            boolean hasNewPhotos = photos != null && photos.stream().anyMatch(p -> !p.isEmpty());
-            if (hasNewPhotos) {
-                for (Photo oldPhoto : oldPhotos) {
-                    photoService.deleteById(oldPhoto.getId());
-                }
-                savePhotos(post, photos);
-            } else {
-                post.setPhotos(oldPhotos);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @PostMapping("/post/delete/{id}")
     public String deletePost(@PathVariable int id, Model model) {
         try {
@@ -230,7 +208,6 @@ public class PostController {
         return ResponseEntity.ok("Файлы загружены");
     }
 
-
     private void saveAuthor(Post post, HttpSession session) {
         User user = (User) session.getAttribute("user");
         post.setAuthor(userService.findById(user.getId()));
@@ -254,5 +231,27 @@ public class PostController {
     private boolean isOwner(HttpSession session, Post post) {
         User user = (User) session.getAttribute("user");
         return user != null && post.getAuthor().getId() == user.getId();
+    }
+
+    private boolean checkOldPriceEqualsNew(long oldPrice, long newPrice) {
+        return oldPrice == newPrice;
+    }
+
+    private void checkPhotosInPost(Post post, List<MultipartFile> photos) {
+        try {
+            Post oldPost = postService.findById(post.getId());
+            Set<Photo> oldPhotos = oldPost.getPhotos();
+            boolean hasNewPhotos = photos != null && photos.stream().anyMatch(p -> !p.isEmpty());
+            if (hasNewPhotos) {
+                for (Photo oldPhoto : oldPhotos) {
+                    photoService.deleteById(oldPhoto.getId());
+                }
+                savePhotos(post, photos);
+            } else {
+                post.setPhotos(oldPhotos);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -60,6 +60,28 @@
                     </div>
                 </div>
             </div>
+
+            <div class="detail-item mt-30">
+                <h3>История изменения цены</h3>
+                <div th:if="${#lists.isEmpty(post.priceHistory)}">
+                    <p>История цен отсутствует</p>
+                </div>
+                <table th:if="${!#lists.isEmpty(post.priceHistory)}" class="price-history-table">
+                    <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Цена (₽)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="entry : ${post.priceHistory}">
+                        <td th:text="${#temporals.format(entry.created, 'dd.MM.yyyy HH:mm')}"></td>
+                        <td th:text="${entry.price}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
 
         <div class="mt-30">
