@@ -2,58 +2,74 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Объявления</title>
   <link rel="stylesheet" href="/css/styles.css"/>
 </head>
 <body>
 
-<!-- Навигационное меню -->
-<div th:replace="fragments/navigation :: navigation"></div>
+<div class="navbar">
+  <div class="container">
+    <div th:replace="fragments/navigation :: navigation"></div>
+  </div>
+</div>
 
-<h1>Объявления по продаже машин</h1>
+<div class="container">
+  <h1>Объявления по продаже машин</h1>
 
-<!-- Ссылка на создание нового объявления -->
-<a th:href="@{/post/create}">Новое объявление</a>
+  <div class="mb-20">
+    <a th:href="@{/post/create}" class="btn">Новое объявление</a>
+  </div>
 
-<table>
-  <thead>
-  <tr>
-    <th>Фото</th>
-    <th>Описание</th>
-    <th>Статус</th>
-    <th>Машина</th>
-    <th>Автор</th>
-    <th>Дата публикации</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="post : ${posts}">
-    <td>
-      <img th:if="${post.photos != null and !post.photos.isEmpty()}"
-           th:src="@{/photo/{id}(id=${post.photos.iterator().next().id})}"
-           alt="Фото"
-           width="150" height="100"/>
-      <span th:if="${post.photos == null or post.photos.isEmpty()}">Нет фото</span>
-    </td>
-    <td>
-      <a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.description}"></a>
-    </td>
-    <td th:text="${post.sold ? 'Продано' : 'В продаже'}"></td>
-    <td>
-      <div>
-        Марка: <span th:text="${post.car.mark.name}"></span><br>
-        Модель: <span th:text="${post.car.model.name}"></span><br>
-        Год выпуска: <span th:text="${post.car.year}"></span><br>
-      </div>
-    </td>
-    <td th:text="${post.author.login}"></td>
-    <td th:text="${#temporals.format(post.created, 'dd.MM.yyyy HH:mm')}"></td>
-  </tr>
-  </tbody>
-</table>
+  <div class="card">
+    <table>
+      <thead>
+      <tr>
+        <th>Фото</th>
+        <th>Описание</th>
+        <th>Статус</th>
+        <th>Машина</th>
+        <th>Автор</th>
+        <th>Дата публикации</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="post : ${posts}">
+        <td>
+          <img th:if="${post.photos != null and !post.photos.isEmpty()}"
+               th:src="@{/photo/{id}(id=${post.photos.iterator().next().id})}"
+               alt="Фото"
+               class="img-thumbnail"
+               width="150"/>
+          <span th:if="${post.photos == null or post.photos.isEmpty()}">Нет фото</span>
+        </td>
+        <td>
+          <a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.description}"></a>
+        </td>
+        <td>
+          <span th:if="${post.sold}" class="btn btn-danger" style="padding: 5px 10px; font-size: 14px;">Продано</span>
+          <span th:unless="${post.sold}" class="btn btn-secondary" style="padding: 5px 10px; font-size: 14px;">В продаже</span>
+        </td>
+        <td>
+          <div>
+            <strong>Марка:</strong> <span th:text="${post.car.mark.name}"></span><br>
+            <strong>Модель:</strong> <span th:text="${post.car.model.name}"></span><br>
+            <strong>Год:</strong> <span th:text="${post.car.year}"></span>
+          </div>
+        </td>
+        <td th:text="${post.author.login}"></td>
+        <td th:text="${#temporals.format(post.created, 'dd.MM.yyyy HH:mm')}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-<!-- Футер -->
-<footer th:include="fragments/footer :: footer"></footer>
+<footer class="footer">
+  <div class="container">
+    <div th:replace="fragments/footer :: footer"></div>
+  </div>
+</footer>
 
 </body>
 </html>

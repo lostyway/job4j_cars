@@ -2,77 +2,105 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Создание объявления</title>
     <link rel="stylesheet" href="/css/styles.css"/>
 </head>
 <body>
 
-<h1>Новое объявление</h1>
-
-<form th:action="@{/post/save}" th:object="${post}" method="post" enctype="multipart/form-data">
-    <div>
-        <label for="description">Описание:</label>
-        <textarea id="description" name="description" rows="4" cols="50" required></textarea>
+<div class="navbar">
+    <div class="container">
+        <div th:replace="fragments/navigation :: navigation"></div>
     </div>
+</div>
 
-    <div>
-        <label for="price">Цена (₽):</label>
-        <input type="number" id="price" name="price" min="0" required>
+<div class="container">
+    <div class="card">
+        <h1>Новое объявление</h1>
+
+        <form th:action="@{/post/save}" th:object="${post}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="description">Описание:</label>
+                <textarea id="description" name="description" rows="6" required
+                          placeholder="Подробно опишите автомобиль..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="price">Цена (₽):</label>
+                <input type="number" id="price" name="price" min="0" required
+                       placeholder="Введите цену в рублях">
+            </div>
+
+            <fieldset>
+                <legend>Информация об автомобиле</legend>
+
+                <div class="grid two-columns">
+                    <div class="form-group">
+                        <label for="mark">Марка:</label>
+                        <select id="mark" name="car.mark.id" required>
+                            <option value="" disabled selected>Выберите марку</option>
+                            <option th:each="mark : ${marks}"
+                                    th:value="${mark.id}"
+                                    th:text="${mark.name}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="model">Модель:</label>
+                        <select id="model" name="car.model.id" required>
+                            <option value="" disabled selected>Выберите модель</option>
+                            <option th:each="model : ${models}"
+                                    th:value="${model.id}"
+                                    th:text="${model.name}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="year">Год выпуска:</label>
+                        <select id="year" name="car.year" required>
+                            <option value="" disabled selected>Выберите год</option>
+                            <option th:each="year : ${years}"
+                                    th:value="${year}"
+                                    th:text="${year}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="engine">Двигатель:</label>
+                        <select id="engine" name="car.engine.id" required>
+                            <option value="" disabled selected>Выберите двигатель</option>
+                            <option th:each="engine : ${engines}"
+                                    th:value="${engine.id}"
+                                    th:text="${engine.name}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="photos">Фотографии автомобиля:</label>
+                    <input type="file" id="photos" name="photo" multiple
+                           class="file-input" accept="image/*"/>
+                    <div class="file-hint">Можно загрузить несколько фотографий</div>
+                </div>
+            </fieldset>
+
+            <div class="form-actions">
+                <button type="submit" class="btn">Создать объявление</button>
+                <a th:href="@{/}" class="btn btn-secondary">Отмена</a>
+            </div>
+        </form>
     </div>
+</div>
 
-    <!-- Машина -->
-    <fieldset>
-        <legend>Информация об автомобиле</legend>
-
-        <div>
-            <label for="mark">Марка:</label>
-            <select id="mark" name="car.mark.id" required>
-                <option th:each="mark : ${marks}"
-                        th:value="${mark.id}"
-                        th:text="${mark.name}">Марка
-                </option>
-            </select>
-        </div>
-
-        <div>
-            <label for="model">Модель:</label>
-            <select id="model" name="car.model.id" required>
-                <option th:each="model : ${models}"
-                        th:value="${model.id}"
-                        th:text="${model.name}">Модель
-                </option>
-            </select>
-        </div>
-
-        <div>
-            <label for="year">Год выпуска:</label>
-            <select id="year" name="car.year" required>
-                <option th:each="year : ${years}"
-                        th:value="${year}"
-                        th:text="${year}">2023
-                </option>
-            </select>
-        </div>
-
-        <div>
-            <label for="engine">Двигатель:</label>
-            <select id="engine" name="car.engine.id" required>
-                <option th:each="engine : ${engines}"
-                        th:value="${engine.id}"
-                        th:text="${engine.name}">-
-                </option>
-            </select>
-        </div>
-
-        <div>
-            <input type="file" name="photo" multiple />
-        </div>
-
-    </fieldset>
-    <div>
-        <button type="submit">Сохранить</button>
+<footer class="footer">
+    <div class="container">
+        <div th:replace="fragments/footer :: footer"></div>
     </div>
-</form>
+</footer>
 
 </body>
 </html>
