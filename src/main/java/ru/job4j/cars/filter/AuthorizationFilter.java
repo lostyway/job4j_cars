@@ -35,6 +35,6 @@ public class AuthorizationFilter extends HttpFilter {
                 || uri.endsWith("/user/login")
                 || uri.startsWith("/js")
                 || uri.startsWith("/css")
-                || uri.startsWith("/photo");
+                || uri.startsWith("/pageImage");
     }
 }

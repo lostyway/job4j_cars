@@ -70,7 +70,6 @@ public class PhotoService implements IPhotoService {
             return Optional.empty();
         }
         var content = readAllAsBytes(photoOptional.get().getPath());
-        log.info("Фото '{}' загружено. Размер: {} байт", photoOptional.get().getName(), content.length);
         return Optional.of(new PhotoDto(photoOptional.get().getName(), content));
     }
 
