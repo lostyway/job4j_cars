@@ -1,8 +1,8 @@
 package ru.job4j.cars.repository;
 
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.cars.model.Post;
+import ru.job4j.cars.utils.TransactionalUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,12 +10,12 @@ import java.util.Optional;
 @Repository
 public class PostRepository extends AbstractCrudRepository<Post, Integer> {
 
-    public PostRepository(SessionFactory sf) {
-        super(sf, Post.class, "id");
+    public PostRepository(TransactionalUtil tx) {
+        super(tx, Post.class, "id");
     }
 
     public List<Post> findAllPostOrderById() {
-        return txReturn(session -> session
+        return tx.txResult(session -> session
                 .createQuery("""
                                 select distinct p from Post p
                                 left join fetch p.photos
@@ -28,7 +28,7 @@ public class PostRepository extends AbstractCrudRepository<Post, Integer> {
     }
 
     public Optional<Post> findPostById(int id) {
-        return txReturn(session -> session
+        return tx.txResult(session -> session
                 .createQuery("""
                                 select distinct p from Post p
                                 left join fetch p.photos
@@ -43,7 +43,7 @@ public class PostRepository extends AbstractCrudRepository<Post, Integer> {
     }
 
     public List<Post> findAllOrderByTimeDesc() {
-        return txReturn(session -> session
+        return tx.txResult(session -> session
                 .createQuery("""
                                 select distinct p from Post p
                                 left join fetch p.photos

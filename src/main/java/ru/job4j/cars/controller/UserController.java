@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.job4j.cars.GlobalExceptionMessage;
 import ru.job4j.cars.exception.NotFoundException;
 import ru.job4j.cars.model.User;
 import ru.job4j.cars.service.UserService;
@@ -18,9 +19,10 @@ import ru.job4j.cars.service.UserService;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final String EXCEPTION = GlobalExceptionMessage.GLOBAL_EXCEPTION_MESSAGE.toString();
 
     @GetMapping("/login")
-    public String getLoginPage(Model model) {
+    public String getLoginPage() {
         return "user/login";
     }
 
@@ -34,7 +36,7 @@ public class UserController {
             model.addAttribute("error", e.getMessage());
             return "user/login";
         } catch (Exception e) {
-            model.addAttribute("error", "Произошла непредвиденная ошибка");
+            model.addAttribute("error", EXCEPTION);
             return "errors/404";
         }
     }
@@ -53,7 +55,7 @@ public class UserController {
             model.addAttribute("error", e.getMessage());
             return "user/register";
         } catch (Exception e) {
-            model.addAttribute("error", "Произошла непредвиденная ошибка");
+            model.addAttribute("error", EXCEPTION);
             return "errors/404";
         }
     }

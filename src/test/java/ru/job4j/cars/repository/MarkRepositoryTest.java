@@ -1,10 +1,5 @@
 package ru.job4j.cars.repository;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.job4j.cars.model.Mark;
@@ -13,27 +8,12 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MarkRepositoryTest {
+class MarkRepositoryTest extends AbstractRepositoryTest<Mark> {
     private static MarkRepository markRepository;
-    private static StandardServiceRegistry registry;
-    private static SessionFactory sf;
 
     @BeforeEach
-    void setUp() {
-        registry = new StandardServiceRegistryBuilder().configure().build();
-        sf = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-        markRepository = new MarkRepository(sf);
-    }
-
-    @AfterEach
-    void tearDown() {
-        if (sf != null) {
-            sf.close();
-        }
-
-        if (registry != null) {
-            StandardServiceRegistryBuilder.destroy(registry);
-        }
+    void init() {
+        markRepository = new MarkRepository(tx);
     }
 
     @Test
@@ -49,7 +29,6 @@ class MarkRepositoryTest {
         assertThat(optionalFind.isPresent()).isTrue();
         assertThat(optionalFind.get().getName()).isEqualTo(mark.getName());
     }
-
 
     @Test
     void whenFindAllOrderByIdMarkIsSuccessful() {
@@ -96,5 +75,10 @@ class MarkRepositoryTest {
 
         assertThat(res.size()).isEqualTo(4);
         assertThat(res).isEqualTo(List.of(mark2, mark, mark3, mark4));
+    }
+
+    @Override
+    protected String getEntityName() {
+        return "Mark";
     }
 }

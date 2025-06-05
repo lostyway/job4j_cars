@@ -12,7 +12,7 @@ import java.util.function.Function;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TransactionalUtil {
+public class TransactionalUtil implements AutoCloseable {
     private final SessionFactory sf;
 
     public void txVoid(Consumer<Session> command) {
@@ -22,7 +22,9 @@ public class TransactionalUtil {
             command.accept(session);
             session.getTransaction().commit();
         } catch (Exception e) {
+            log.error("Произошла ошибка в транзакции txVoid: {}", String.valueOf(e));
             rollBack(session);
+            throw new IllegalArgumentException("Rollback exception", e);
         }
     }
 
@@ -34,9 +36,9 @@ public class TransactionalUtil {
             session.getTransaction().commit();
             return result;
         } catch (Exception e) {
-            log.error("Произошла ошибка в транзакции: {}", String.valueOf(e));
+            log.error("Произошла ошибка в транзакции txResult: {}", String.valueOf(e));
             rollBack(session);
-            throw e;
+            throw new IllegalArgumentException("Rollback exception", e);
         }
     }
 
@@ -44,5 +46,10 @@ public class TransactionalUtil {
         if (session != null && session.getTransaction().isActive()) {
             session.getTransaction().rollback();
         }
+    }
+
+    @Override
+    public void close() {
+        sf.close();
     }
 }
