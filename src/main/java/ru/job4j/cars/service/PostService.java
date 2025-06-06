@@ -51,6 +51,10 @@ public class PostService implements IService<Post, Integer> {
 
     @Override
     public List<Post> findAll() {
-        return postRepository.findAllOrderByTimeDesc();
+        try {
+            return postRepository.findAllOrderByTimeDesc();
+        } catch (Exception e) {
+            throw new NotFoundException("Произошла ошибка при поиске постов");
+        }
     }
 }

@@ -6,6 +6,7 @@ import ru.job4j.cars.model.*;
 import utils.TestEntityFactory;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ class PostRepositoryTest extends AbstractRepositoryTest<Post> {
 
     @Test
     void whenFindPostById() {
-        LocalDateTime now = LocalDateTime.now().withNano(0);
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         User user = TestEntityFactory.newUser("login", "pass");
         userRepository.create(user);
         Mark mark = TestEntityFactory.newMark("testMark");
@@ -51,7 +52,7 @@ class PostRepositoryTest extends AbstractRepositoryTest<Post> {
         assertThat(postSaved.getId()).isEqualTo(id);
         assertThat(postSaved.getAuthor()).isEqualTo(user);
         assertThat(postSaved.getDescription()).isEqualTo(post.getDescription());
-        assertThat(postSaved.getCreated().withSecond(0)).isEqualTo(post.getCreated().withSecond(0));
+        assertThat(postSaved.getCreated()).isEqualTo(post.getCreated());
         assertThat(postSaved.getCar()).isEqualTo(post.getCar());
     }
 

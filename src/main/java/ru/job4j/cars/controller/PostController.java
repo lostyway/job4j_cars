@@ -43,12 +43,18 @@ public class PostController {
     private final EngineRepository engineRepository;
     private final PhotoService photoService;
     private final PriceService priceService;
-    private static final String EXCEPTION = GlobalExceptionMessage.GLOBAL_EXCEPTION_MESSAGE.toString();
+    private static final String EXCEPTION = GlobalExceptionMessage.GLOBAL_EXCEPTION_MESSAGE.getMessage();
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("posts", postService.findAll());
-        return "index";
+        try {
+            model.addAttribute("posts", postService.findAll());
+            return "index";
+        } catch (Exception e) {
+            log.error(EXCEPTION, e);
+            model.addAttribute("error", EXCEPTION);
+            return "errors/404";
+        }
     }
 
     @GetMapping("/post/{id}")
@@ -79,16 +85,22 @@ public class PostController {
 
     @GetMapping("/post/create")
     public String getCreatingPage(Model model) {
-        model.addAttribute("post", new Post());
-        model.addAttribute("marks", markRepository.findAllOrderByNameAsc());
-        model.addAttribute("models", modelRepository.findAllOrderByNameAsc());
-        model.addAttribute("engines", engineRepository.findAllOrderById());
-        model.addAttribute("years", IntStream.rangeClosed(1940, Year.now().getValue())
-                .boxed()
-                .sorted(Comparator.reverseOrder())
-                .collect(Collectors.toList()));
+        try {
+            model.addAttribute("post", new Post());
+            model.addAttribute("marks", markRepository.findAllOrderByNameAsc());
+            model.addAttribute("models", modelRepository.findAllOrderByNameAsc());
+            model.addAttribute("engines", engineRepository.findAllOrderById());
+            model.addAttribute("years", IntStream.rangeClosed(1940, Year.now().getValue())
+                    .boxed()
+                    .sorted(Comparator.reverseOrder())
+                    .collect(Collectors.toList()));
 
-        return "post-create";
+            return "post-create";
+        } catch (Exception e) {
+            model.addAttribute("error", EXCEPTION);
+            log.error(e.getMessage(), e);
+            return "errors/404";
+        }
     }
 
     @PostMapping("/post/save")
