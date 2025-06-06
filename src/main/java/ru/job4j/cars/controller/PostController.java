@@ -106,9 +106,9 @@ public class PostController {
     @PostMapping("/post/save")
     public String createPost(@ModelAttribute Post post, @RequestParam("photo") List<MultipartFile> photos, Model model, HttpSession session) {
         try {
-            validatePost(post);
             saveCar(post);
             saveAuthor(post, session);
+            validatePost(post);
             Post postResult = postService.save(post);
             savePriceHistory(postResult, post.getPrice());
             savePhotos(postResult, photos);
@@ -155,14 +155,14 @@ public class PostController {
     @PostMapping("/post/update")
     public String submitPostUpdate(@ModelAttribute Post post, @RequestParam("photo") List<MultipartFile> photos, Model model, HttpSession session) {
         try {
-            validatePost(post);
             Post oldPost = postService.findById(post.getId());
+            saveAuthor(post, session);
+            saveCar(post);
+            validatePost(post);
             if (!checkOldPriceEqualsNew(oldPost.getPrice(), post.getPrice())) {
                 savePriceHistory(post, post.getPrice());
             }
             checkPhotosInPost(post, photos);
-            saveCar(post);
-            saveAuthor(post, session);
 
             postService.update(post, post.getId());
             carService.delete(oldPost.getCar().getId());
