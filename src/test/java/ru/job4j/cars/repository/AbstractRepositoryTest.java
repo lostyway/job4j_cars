@@ -27,7 +27,12 @@ public abstract class AbstractRepositoryTest<T> {
         session = sf.openSession();
         transaction = session.beginTransaction();
 
-        session.createQuery("delete from " + getEntityName()).executeUpdate();
+        session.createQuery("delete from Post").executeUpdate();
+        session.createQuery("delete from Car").executeUpdate();
+        session.createQuery("delete from Model").executeUpdate();
+        session.createQuery("delete from Mark").executeUpdate();
+        session.createQuery("delete from Engine").executeUpdate();
+        session.createQuery("delete from User").executeUpdate();
 
         transaction.commit();
 

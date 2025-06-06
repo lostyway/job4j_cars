@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @Builder
-@Table(name = "cars")
+@Table(name = "car")
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +18,7 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "year")
+    @Column(name = "car_year")
     private String year;
 
     @ManyToOne

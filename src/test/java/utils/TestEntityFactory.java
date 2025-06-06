@@ -1,4 +1,4 @@
-package ru.job4j.cars.utils;
+package utils;
 
 import ru.job4j.cars.model.*;
 

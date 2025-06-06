@@ -15,7 +15,7 @@
     <include file="scripts/008_dml_insert_table_engines.sql" relativeToChangelogFile="true"/>
     <include file="scripts/009_ddl_create_table_owners.sql" relativeToChangelogFile="true"/>
     <include file="scripts/010_dml_insert_table_owners.sql" relativeToChangelogFile="true"/>
-    <include file="scripts/011_ddl_create_table_cars.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/011_ddl_create_table_car.sql" relativeToChangelogFile="true"/>
     <include file="scripts/012_ddl_create_table_auto_post.sql" relativeToChangelogFile="true"/>
     <include file="scripts/013_ddl_create_table_photos.sql" relativeToChangelogFile="true"/>
     <include file="scripts/015_ddl_create_table_history.sql" relativeToChangelogFile="true"/>

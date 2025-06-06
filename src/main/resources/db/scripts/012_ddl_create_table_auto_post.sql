@@ -6,5 +6,5 @@ create table auto_post
     price       bigint                        not null,
     is_sold      boolean                       not null,
     auto_user_id int references auto_user (id) not null,
-    car_id       int references cars (id)       not null
+    car_id       int references car (id)       not null
 );
