@@ -49,7 +49,7 @@ public class Post {
     )
     private List<User> subscribers = new ArrayList<>();
 
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "car_id")
     private Car car;
 

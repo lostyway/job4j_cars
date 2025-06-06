@@ -3,10 +3,12 @@ package ru.job4j.cars.repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.job4j.cars.model.Photo;
+import ru.job4j.cars.model.Post;
 import ru.job4j.cars.utils.TransactionalUtil;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor

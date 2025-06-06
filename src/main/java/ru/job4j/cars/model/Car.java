@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Data
 @Builder
 @Table(name = "car")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id", "model", "mark", "engine", "year"})
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(of = {"id", "year", "mark", "model", "engine"})

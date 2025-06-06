@@ -41,7 +41,11 @@ public class CarService implements IService<Car, Integer> {
 
     @Override
     public void delete(Integer id) {
-        carRepository.delete(id);
+        try {
+            carRepository.delete(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка при удалении автомобиля " + id);
+        }
     }
 
     @Override
