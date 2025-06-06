@@ -157,15 +157,9 @@ public class PostController {
     public String submitPostUpdate(@ModelAttribute Post post, @RequestParam("photo") List<MultipartFile> photos, Model model, HttpSession session) {
         try {
             Post postFromBase = postService.findById(post.getId());
-            if (postFromBase == null || post == null) {
-                model.addAttribute("error", "Пост пуст");
-                return "errors/404";
-            }
-            if (!isOwner(session, postFromBase)) {
-                model.addAttribute("error", "Вы не являетесь создателем публикации");
-                return "errors/404";
-            }
-            Car oldCar = postFromBase.getCar();
+
+            validateUpdatePost(post, session, postFromBase);
+
             savePriceHistoryIfChanged(post, postFromBase);
             postFromBase.setDescription(post.getDescription());
             postFromBase.setPrice(post.getPrice());
@@ -174,13 +168,30 @@ public class PostController {
 
             saveAuthor(postFromBase, session);
             validatePost(postFromBase);
+
             photoService.checkAndDeletePhotosInPost(photos, postFromBase);
 
-            postService.update(postFromBase, postFromBase.getId());
+            boolean isUpdated = postService.updatePostAndCar(postFromBase, postFromBase.getId());
+            if (!isUpdated) {
+                throw new NotFoundException("Не удалось сохранить изменения");
+            }
             return "redirect:/post/" + postFromBase.getId();
-        } catch (Exception e) {
+        } catch (NotFoundException e) {
             model.addAttribute("error", e.getMessage());
             return "errors/404";
+        } catch (Exception e) {
+            model.addAttribute("error", EXCEPTION);
+            return "errors/404";
+        }
+    }
+
+    private void validateUpdatePost(Post post, HttpSession session, Post postFromBase) {
+        if (postFromBase == null || post == null) {
+            throw new NotFoundException("Пост пуст");
+        }
+
+        if (!isOwner(session, postFromBase)) {
+            throw new NotFoundException("Вы не являетесь создателем публикации");
         }
     }
 
@@ -200,8 +211,7 @@ public class PostController {
         } catch (NotFoundException e) {
             model.addAttribute("error", e.getMessage());
             return "errors/404";
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             model.addAttribute("error", EXCEPTION);
             log.error(e.getMessage(), e);
             return "errors/404";

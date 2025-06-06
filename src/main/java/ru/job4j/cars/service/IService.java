@@ -6,7 +6,7 @@ import java.util.List;
 public interface IService<T, ID extends Serializable> {
     T save(T entity);
 
-    boolean update(T entity, int id);
+    boolean updatePostAndCar(T entity, int id);
 
     void delete(ID id);
 

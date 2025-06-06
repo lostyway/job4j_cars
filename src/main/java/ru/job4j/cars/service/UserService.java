@@ -23,7 +23,7 @@ public class UserService implements IService<User, Integer> {
     }
 
     @Override
-    public boolean update(User user, int id) {
+    public boolean updatePostAndCar(User user, int id) {
         try {
             user.setId(id);
             userRepository.update(user);

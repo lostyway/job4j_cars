@@ -29,7 +29,7 @@ public class CarService implements IService<Car, Integer> {
     }
 
     @Override
-    public boolean update(Car car, int id) {
+    public boolean updatePostAndCar(Car car, int id) {
         try {
             car.setId(id);
             carRepository.update(car);

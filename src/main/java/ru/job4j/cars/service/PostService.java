@@ -27,7 +27,7 @@ public class PostService implements IService<Post, Integer> {
     }
 
     @Override
-    public boolean update(Post post, int id) {
+    public boolean updatePostAndCar(Post post, int id) {
         try {
             post.setId(id);
             Post postToTime = findById(id);

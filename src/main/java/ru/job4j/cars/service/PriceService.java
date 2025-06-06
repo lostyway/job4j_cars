@@ -23,7 +23,7 @@ public class PriceService implements IService<PriceHistory, Integer>{
     }
 
     @Override
-    public boolean update(PriceHistory priceHistory, int id) {
+    public boolean updatePostAndCar(PriceHistory priceHistory, int id) {
         try {
             priceHistory.setId(id);
             priceRepository.update(priceHistory);
